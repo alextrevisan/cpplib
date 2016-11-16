@@ -1,0 +1,13 @@
+{
+	"g++ (i686-posix-dwarf-rev1, Built by MinGW-W64 project) 4.9.2": {
+		"SFML": {
+			"description": "SFML static",
+			"2.4.0": [{
+                "file-size": 1838372,
+                "mirrors": [{
+                    "url": ""
+                }]
+			}]
+		}
+	}
+}
