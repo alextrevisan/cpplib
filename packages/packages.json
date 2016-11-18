@@ -5,7 +5,7 @@
 			"2.4.0": [{
                 "file-size": 1838372,
                 "mirrors": [{
-                    "url": ""
+                    "url": "https://raw.githubusercontent.com/alextrevisan/cpplib/master/packages/windows/MinGW-W64/4.9.2/SFML.zip"
                 }]
 			}]
 		}
