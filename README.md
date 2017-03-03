@@ -3,7 +3,7 @@ Compiled dependency installer for c++
 
 1. Download or compile cpplib
 2. Add binary files into your project folder
-3. Run the commands and select yout compiler
+3. Run the commands: update, select your compiler and install a library
    
     * *cpplib update*
     * *cpplib compiler MinGW-W64-4.9.2* 
