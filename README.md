@@ -1,10 +1,10 @@
 # cpplib
 Compiled dependency installer for c++
 
- 1. Download or compile cpplib
- 2. Add binary files into your project folder
- 3. Run the commands and select yout compiler
-
+1. Download or compile cpplib
+2. Add binary files into your project folder
+3. Run the commands and select yout compiler
+   
     * *cpplib update*
     * *cpplib compiler MinGW-W64-4.9.2* 
     * *cpplib install SFML*
