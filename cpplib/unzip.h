@@ -25,7 +25,6 @@ bool unzipAll(TCHAR * pszArchive1)
         counter++;
         TCHAR* targetname = ze.name;
         ZRESULT zr = UnzipItem(hz, i, targetname, 0, ZIP_FILENAME);
-        std::cout<<std::hex<<zr<<std::endl;
     }
 }
 
