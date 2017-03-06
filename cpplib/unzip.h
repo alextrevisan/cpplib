@@ -10,13 +10,11 @@ bool unzipAll(TCHAR * pszArchive1)
     if(!hz)
     {
         std::cout<<"Error opening file!";
-
     }
     ZIPENTRY ze;
     memset(&ze, 0, sizeof(ze));
     GetZipItem(hz, -1, &ze);
     int numitems = ze.index;
-    printf("\nitems in archive: %d\n", numitems);
 
     for (int i = 0; i < numitems; i++)
     {
