@@ -22,7 +22,6 @@ int main(int argc, char ** argv)
             std::cout<<"2. Run 'cpplib compiler list' to show supported compilers"<<std::endl;
             std::cout<<"3. Run 'cpplib compiler COMPILER_NAME' to set default compiler"<<std::endl;
             std::cout<<"4. Run 'cpplib install LIBRARY' to install"<<std::endl;
-            system("pause");
         }
 
 
@@ -49,15 +48,22 @@ int main(int argc, char ** argv)
 
         /** INSTALL **/
         it = std::find(args.begin(), args.end(), "install");
-        if(it != args.end() && it+1 !=args.end())
+        if(it != args.end())
         {
-            if(it+2 != args.end())//Install with defined version
+            if(it+1 != args.end())
             {
-                cpplib::install(*(it+1),*(it+2));
+                if(it+2 != args.end())//Install with defined version
+                {
+                    cpplib::install(*(it+1),*(it+2));
+                }
+                else                 //Install lastast version
+                {
+                    cpplib::install(*(it+1));
+                }
             }
-            else                 //Install lastast version
+            else
             {
-                cpplib::install(*(it+1));
+                cpplib::install();  //Install all libs in config.json
             }
 
         }

@@ -3,6 +3,7 @@
 
 #include "download.h"
 #include "json11.hpp"
+#include "unzip.h"
 
 namespace cpplib {
 
@@ -64,7 +65,40 @@ void setcompiler(const std::string& compiler)
     std::cout<<"compiler set to: "<<compiler<<std::endl;
 }
 
-void install(const std::string& package, const std::string& version="lastest")
+void addpackage(const std::string& package, const std::string& version)
+{
+    json11::Json config = load("config.json");
+
+    if(config.object_items().size()<=0)
+    {
+
+        json11::Json::object packages = { json11::Json::object { { package, version } } };
+        config = json11::Json::object({{"packages", packages}});
+    }
+    else
+    {
+        if(config.object_items().find("packages") == config.object_items().end())
+        {
+            json11::Json::object packages = { json11::Json::object { { package, version } } };
+            json11::Json::object ob = config.object_items();
+            ob["packages"] = packages;
+            config = ob;
+        }
+        else
+        {
+            json11::Json::object ob = config.object_items();
+            json11::Json::object packages = ob["packages"].object_items();
+            packages[package] = version;
+            ob["packages"] = packages;
+            config = ob;
+        }
+    }
+    std::ofstream configfile("config.json");
+    configfile<<config.dump();
+    configfile.close();
+}
+
+void install(const std::string& package="all", const std::string& version="lastest")
 {
     json11::Json config = load("config.json");
     if(config.object_items().find("compiler") == config.object_items().end())
@@ -74,51 +108,68 @@ void install(const std::string& package, const std::string& version="lastest")
         return;
     }
     const std::string compiler = config["compiler"].string_value();
-    json11::Json packages = load("packages.json");
-
-    if(packages.object_items().find(compiler) == packages.object_items().end())
+    if(package!="all")
     {
-        std::cout<<"Can't find selected compiler: "<<compiler<<std::endl;
-        return;
-    }
-    packages = packages[compiler];
-    if(packages.object_items().find(package) == packages.object_items().end())
-    {
-        std::cout<<"Can't find selected package: "<<package<<std::endl;
-    }
-    packages = packages[package];
+        json11::Json packages = load("packages.json");
 
-
-    std::string packageDescription = packages["description"].string_value();
-    //std::cout<<packageDescription<<std::endl;
-    packages = packages["versions"];
-
-    if(version!="lastest")
-    {
-        std::stringstream ss(version);
-        std::string v;
-        std::getline(ss, v, '=');
-        if(v=="version")
+        if(packages.object_items().find(compiler) == packages.object_items().end())
         {
+            std::cout<<"Can't find selected compiler: "<<compiler<<std::endl;
+            return;
+        }
+        packages = packages[compiler];
+        if(packages.object_items().find(package) == packages.object_items().end())
+        {
+            std::cout<<"Can't find selected package: "<<package<<std::endl;
+        }
+        packages = packages[package];
+
+
+        std::string packageDescription = packages["description"].string_value();
+        //std::cout<<packageDescription<<std::endl;
+        packages = packages["versions"];
+
+        if(version!="lastest")
+        {
+            std::stringstream ss(version);
+            std::string v;
             std::getline(ss, v, '=');
-            if(packages.object_items().find(v)==packages.object_items().end())
+            if(v=="version")
             {
-                std::cout<<packageDescription<<" version "<<v<<" not found."<<std::endl;
-                return;
+                std::getline(ss, v, '=');
+                if(packages.object_items().find(v)==packages.object_items().end())
+                {
+                    std::cout<<packageDescription<<" version "<<v<<" not found."<<std::endl;
+                    return;
+                }
+                std::cout<<"Installing "<<packageDescription<<" version "<<v<<std::endl;
+                addpackage(package, v);
+                Download(packages[v]["mirrors"].array_items()[0]["url"].string_value().c_str(), "lib.zip");
+                unzipAll((TCHAR*)"lib.zip");
+
             }
-            std::cout<<"Installing "<<packageDescription<<" version "<<v<<std::endl;
-            Download(packages[v]["mirrors"].array_items()[0]["url"].string_value().c_str(), "lib.zip");
-            unzipAll("lib.zip");
 
         }
-
+        else for (auto mapit = packages.object_items().begin(); mapit!=packages.object_items().end(); ++mapit)
+        {
+            std::cout<<"Installing "<<packageDescription;
+            std::cout<<" version "<<mapit->first<<std::endl;
+            addpackage(package, mapit->first);
+            Download(packages[mapit->first]["mirrors"].array_items()[0]["url"].string_value().c_str(), "lib.zip");
+            unzipAll((TCHAR*)"lib.zip");
+        }
     }
-    else for (auto mapit = packages.object_items().begin(); mapit!=packages.object_items().end(); ++mapit)
+    else
     {
-        std::cout<<"Installing "<<packageDescription;
-        std::cout<<" version "<<mapit->first<<std::endl;
-        Download(packages[mapit->first]["mirrors"].array_items()[0]["url"].string_value().c_str(), "lib.zip");
-        unzipAll("lib.zip");
+        std::cout<<"Installing all packages in config.json"<<std::endl;
+        json11::Json::object ob = config.object_items();
+        json11::Json::object packages = ob["packages"].object_items();
+        auto it = packages.begin();
+        while(it!=packages.end())
+        {
+            install(it->first);
+            ++it;
+        }
     }
 }
 
