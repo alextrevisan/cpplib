@@ -24,6 +24,7 @@ bool unzipAll(TCHAR * pszArchive1)
         TCHAR* targetname = ze.name;
         ZRESULT zr = UnzipItem(hz, i, targetname, 0, ZIP_FILENAME);
     }
+    CloseZip(hz);
 }
 
 #endif // UNZIP_H
