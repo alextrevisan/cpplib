@@ -21,9 +21,8 @@
 					}]
 				}
 			}
-		}
-	},
-    "libmicrohttpd": {
+		},
+        "libmicrohttpd": {
 			"description": "libmicrohttpd",
 			"versions": {
 				"0.9.55": {
