@@ -7,7 +7,7 @@ set(LIB_SUFFIX 64)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/;${CMAKE_MODULE_PATH}")
 
-include_directories ("${PROJECT_BINARY_DIR}")
+include_directories ("${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_SEARCH_START_STATIC 1)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_SEARCH_END_STATIC 1)
