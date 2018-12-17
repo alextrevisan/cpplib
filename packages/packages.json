@@ -11,6 +11,17 @@
 				}
 			}
 		},
+        "SFML": {
+			"description": "SFML GCC 7.3.0 MinGW (DW2) - 32-bit",
+			"versions": {
+				"2.5.1": {
+					"file-size": 16343922,
+					"mirrors": [{
+						"url": "https://media.githubusercontent.com/media/alextrevisan/cpplib-files/master/packages/windows/MinGW-W64/7.3.0/SFML-2.5.1.zip"
+					}]
+				}
+			}
+		},
 		"Ogre3D": {
 			"description": "Ogre3D - OpenGL3+ v2.1 master - without threading",
 			"versions": {
